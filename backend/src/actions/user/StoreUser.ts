@@ -1,7 +1,7 @@
 import { PrismaClient } from "@prisma/client";
 import { CryptoService } from "../../services/CryptoService";
 
-type StoreUserDTO = {
+type StoreUserInputDTO = {
   name: string;
   email: string;
   password: string;
@@ -13,7 +13,7 @@ class StoreUser {
     private readonly cryptoService: CryptoService
   ) {}
 
-  public async handle({ name, email, password }: StoreUserDTO) {
+  public async handle({ name, email, password }: StoreUserInputDTO) {
     const user = await this.prismaClient.user.create({
       data: {
         name,
