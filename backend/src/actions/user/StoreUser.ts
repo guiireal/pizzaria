@@ -7,7 +7,7 @@ type StoreUserInputDTO = {
   password: string;
 };
 
-class StoreUser {
+export class StoreUser {
   constructor(
     private readonly prismaClient: PrismaClient,
     private readonly cryptoService: CryptoService
@@ -25,11 +25,10 @@ class StoreUser {
         name: true,
         email: true,
         createdAt: true,
+        updatedAt: true,
       },
     });
 
     return user;
   }
 }
-
-export { StoreUser };

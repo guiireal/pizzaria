@@ -1,6 +1,7 @@
 import type { Request, Response } from "express";
 import { GetUserByEmail } from "../actions/user/GetUserByEmail";
 import { StoreUser } from "../actions/user/StoreUser";
+import { BadRequestError } from "../errors/BadRequestError";
 
 type StoreUserReqBody = {
   name: string;
@@ -8,7 +9,7 @@ type StoreUserReqBody = {
   password: string;
 };
 
-class UserController {
+export class UserController {
   constructor(
     private readonly storeUser: StoreUser,
     private readonly getUserByEmail: GetUserByEmail
@@ -18,21 +19,21 @@ class UserController {
     const { name, email, password } = req.body as StoreUserReqBody;
 
     if (!name) {
-      throw new Error("Name is required!");
+      throw new BadRequestError("Name is required!");
     }
 
     if (!email) {
-      throw new Error("Email is required!");
+      throw new BadRequestError("Email is required!");
     }
 
     if (!password) {
-      throw new Error("Password is required!");
+      throw new BadRequestError("Password is required!");
     }
 
     const userAlreadyExists = await this.getUserByEmail.handle(email);
 
     if (userAlreadyExists) {
-      throw new Error("User already exists!");
+      throw new BadRequestError("User already exists!");
     }
 
     const user = await this.storeUser.handle({ name, email, password });
@@ -45,5 +46,3 @@ class UserController {
     });
   }
 }
-
-export { UserController };

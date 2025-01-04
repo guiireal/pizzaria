@@ -10,7 +10,7 @@ type JWTVerifyOutputDTO = {
   sub: string;
 };
 
-class JWTService {
+export class JWTService {
   private readonly secretToken: string;
   private readonly expiresIn: string;
 
@@ -46,5 +46,3 @@ class JWTService {
     }
   }
 }
-
-export { JWTService };

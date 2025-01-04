@@ -1,8 +1,9 @@
 import type { NextFunction, Request, Response } from "express";
 import { GetUserById } from "../actions/user/GetUserById";
+import { NotAuthorizedError } from "../errors/NotAuthorizedError";
 import { JWTService } from "../services/JWTService";
 
-class AuthMiddleware {
+export class AuthMiddleware {
   constructor(
     private readonly jwtService: JWTService,
     private readonly getUserById: GetUserById
@@ -12,13 +13,11 @@ class AuthMiddleware {
     const bearerToken = req.headers.authorization;
 
     if (!bearerToken) {
-      res.status(401).json({ message: "Token not provided!" });
-      return;
+      throw new NotAuthorizedError("Token not provided!");
     }
 
     if (!bearerToken.startsWith("Bearer ")) {
-      res.status(401).json({ message: "Invalid token format!" });
-      return;
+      throw new NotAuthorizedError("Invalid token!");
     }
 
     const [, token] = bearerToken.split(" ");
@@ -26,15 +25,13 @@ class AuthMiddleware {
     const userId = this.jwtService.verifyToken(token);
 
     if (!userId) {
-      res.status(401).json({ message: "Invalid token!" });
-      return;
+      throw new NotAuthorizedError("Invalid token!");
     }
 
     const user = await this.getUserById.handle(userId);
 
     if (!user) {
-      res.status(401).json({ message: "User not found!" });
-      return;
+      throw new NotAuthorizedError("User not found!");
     }
 
     req.user = user;
@@ -42,5 +39,3 @@ class AuthMiddleware {
     next();
   }
 }
-
-export { AuthMiddleware };

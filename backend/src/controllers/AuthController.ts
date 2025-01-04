@@ -6,7 +6,7 @@ type SignInAuthReqBody = {
   password: string;
 };
 
-class AuthController {
+export class AuthController {
   constructor(private readonly authUser: AuthUser) {}
 
   public async signIn(req: Request, res: Response) {
@@ -23,5 +23,3 @@ class AuthController {
     res.json({ id, name, email });
   }
 }
-
-export { AuthController };

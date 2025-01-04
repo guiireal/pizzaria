@@ -2,7 +2,7 @@ import { PrismaClient } from "@prisma/client";
 
 export const prismaClient = new PrismaClient();
 
-class PrismaService {
+export class PrismaService {
   private readonly prismaClient: PrismaClient;
 
   constructor() {
@@ -13,5 +13,3 @@ class PrismaService {
     return this.prismaClient;
   }
 }
-
-export { PrismaService };

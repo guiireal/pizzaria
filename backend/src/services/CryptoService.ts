@@ -1,6 +1,6 @@
 import crypto from "node:crypto";
 
-class CryptoService {
+export class CryptoService {
   private readonly algorithm = "sha256";
   private readonly saltLength = 16;
 
@@ -26,5 +26,3 @@ class CryptoService {
     return hash === originalHash;
   }
 }
-
-export { CryptoService };

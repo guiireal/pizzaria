@@ -1,6 +1,6 @@
 import { PrismaClient } from "@prisma/client";
 
-class GetUserByEmail {
+export class GetUserByEmail {
   constructor(private readonly prismaClient: PrismaClient) {}
 
   async handle(email: string) {
@@ -11,5 +11,3 @@ class GetUserByEmail {
     });
   }
 }
-
-export { GetUserByEmail };

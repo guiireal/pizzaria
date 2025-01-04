@@ -16,7 +16,7 @@ type AuthUserOutputDTO = {
   token: string;
 };
 
-class AuthUser {
+export class AuthUser {
   constructor(
     private readonly getUserByEmail: GetUserByEmail,
     private readonly cryptoService: CryptoService,
@@ -53,5 +53,3 @@ class AuthUser {
     };
   }
 }
-
-export { AuthUser };

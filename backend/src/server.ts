@@ -8,7 +8,10 @@ import express, {
 
 import "express-async-errors";
 
-import { routes } from "./routes";
+import { BadRequestError } from "./errors/BadRequestError";
+import { ForbiddenError } from "./errors/ForbiddenError";
+import { NotAuthorizedError } from "./errors/NotAuthorizedError";
+import { categoryRoutes, routes } from "./routes";
 
 const PORT = process.env.PORT || 3333;
 
@@ -20,10 +23,33 @@ app.use(express.urlencoded({ extended: true }));
 app.use(cors());
 
 app.use(routes);
+app.use("/categories", categoryRoutes);
 
 app.use((error: Error, _: Request, res: Response, __: NextFunction) => {
-  if (error instanceof Error) {
-    res.status(400).json({ error: error.message });
+  if (error instanceof BadRequestError) {
+    res.status(400).json({
+      status: "error",
+      message: error.message,
+    });
+
+    return;
+  }
+
+  if (error instanceof NotAuthorizedError) {
+    res.status(401).json({
+      status: "error",
+      message: error.message,
+    });
+
+    return;
+  }
+
+  if (error instanceof ForbiddenError) {
+    res.status(403).json({
+      status: "error",
+      message: error.message,
+    });
+    return;
   }
 
   res.status(500).json({
