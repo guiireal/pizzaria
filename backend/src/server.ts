@@ -13,7 +13,9 @@ import { ForbiddenError } from "./errors/ForbiddenError";
 import { NotAuthorizedError } from "./errors/NotAuthorizedError";
 import { categoryRoutes, productRoutes, routes } from "./routes";
 
-const PORT = process.env.PORT || 3333;
+import path from "node:path";
+
+const PORT = process.env.APP_PORT || 3333;
 
 const app = express();
 
@@ -25,6 +27,8 @@ app.use(cors());
 app.use(routes);
 app.use("/categories", categoryRoutes);
 app.use("/products", productRoutes);
+
+app.use("/uploads", express.static(path.resolve(__dirname, "..", "temp")));
 
 app.use((error: Error, _: Request, res: Response, __: NextFunction) => {
   console.log(error);
