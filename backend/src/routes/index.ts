@@ -9,7 +9,8 @@ import { AuthMiddleware } from "../middlewares/AuthMiddleware";
 import { CryptoService } from "../services/CryptoService";
 import { JWTService } from "../services/JWTService";
 import { PrismaService } from "../services/PrismaService";
-import { categoryRoutes } from "./categories";
+import { categoryRoutes } from "./category";
+import { productRoutes } from "./product";
 
 const routes = Router();
 
@@ -34,4 +35,4 @@ routes.get(
 );
 routes.post("/users", userController.store.bind(userController));
 
-export { categoryRoutes, routes };
+export { categoryRoutes, productRoutes, routes };

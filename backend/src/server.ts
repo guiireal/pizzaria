@@ -11,7 +11,7 @@ import "express-async-errors";
 import { BadRequestError } from "./errors/BadRequestError";
 import { ForbiddenError } from "./errors/ForbiddenError";
 import { NotAuthorizedError } from "./errors/NotAuthorizedError";
-import { categoryRoutes, routes } from "./routes";
+import { categoryRoutes, productRoutes, routes } from "./routes";
 
 const PORT = process.env.PORT || 3333;
 
@@ -24,8 +24,11 @@ app.use(cors());
 
 app.use(routes);
 app.use("/categories", categoryRoutes);
+app.use("/products", productRoutes);
 
 app.use((error: Error, _: Request, res: Response, __: NextFunction) => {
+  console.log(error);
+
   if (error instanceof BadRequestError) {
     res.status(400).json({
       status: "error",
