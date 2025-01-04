@@ -16,6 +16,12 @@ class AuthController {
 
     res.json(result);
   }
+
+  public async me(req: Request, res: Response) {
+    const { id, name, email } = req.user!;
+
+    res.json({ id, name, email });
+  }
 }
 
 export { AuthController };

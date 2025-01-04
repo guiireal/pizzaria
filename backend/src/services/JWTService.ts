@@ -1,9 +1,13 @@
-import { sign } from "jsonwebtoken";
+import { sign, verify } from "jsonwebtoken";
 
-type JWTSignInDTO = {
+type JWTSignInInputDTO = {
   id: string;
   name: string;
   email: string;
+};
+
+type JWTVerifyOutputDTO = {
+  sub: string;
 };
 
 class JWTService {
@@ -15,7 +19,7 @@ class JWTService {
     this.expiresIn = process.env.JWT_EXPIRES_IN!;
   }
 
-  public signIn({ id, name, email }: JWTSignInDTO) {
+  public signIn({ id, name, email }: JWTSignInInputDTO) {
     const token = sign(
       {
         name,
@@ -29,6 +33,17 @@ class JWTService {
     );
 
     return token;
+  }
+
+  public verifyToken(jwtToken: string) {
+    try {
+      const { sub } = verify(jwtToken, this.secretToken) as JWTVerifyOutputDTO;
+
+      return sub;
+    } catch (error) {
+      console.error(error);
+      return null;
+    }
   }
 }
 
