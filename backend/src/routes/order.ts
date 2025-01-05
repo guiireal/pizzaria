@@ -1,4 +1,5 @@
 import { Router } from "express";
+import { DestroyItem } from "../actions/order/DestroyItem";
 import { DestroyOrder } from "../actions/order/DestroyOrder";
 import { StoreItem } from "../actions/order/StoreItem";
 import { StoreOrder } from "../actions/order/StoreOrder";
@@ -14,10 +15,13 @@ const prismaClient = new PrismaService().client;
 const storeOrder = new StoreOrder(prismaClient);
 const destroyOrder = new DestroyOrder(prismaClient);
 const storeItem = new StoreItem(prismaClient);
+const destroyItem = new DestroyItem(prismaClient);
+
 const orderController = new OrderController(
   storeOrder,
   destroyOrder,
-  storeItem
+  storeItem,
+  destroyItem
 );
 
 const getUserById = new GetUserById(prismaClient);
@@ -40,6 +44,12 @@ routes.post(
   "/:id/items",
   authMiddleware.handle.bind(authMiddleware),
   orderController.storeItem.bind(orderController)
+);
+
+routes.delete(
+  "/:id/items/:item_id",
+  authMiddleware.handle.bind(authMiddleware),
+  orderController.destroyItem.bind(orderController)
 );
 
 export { routes as orderRoutes };

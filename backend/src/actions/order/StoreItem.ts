@@ -10,7 +10,7 @@ export class StoreItem {
   constructor(private prismaClient: PrismaClient) {}
 
   async handle({ orderId, productId, quantity }: StoreItemInputDTO) {
-    await this.prismaClient.item.create({
+    return await this.prismaClient.item.create({
       data: {
         orderId,
         productId,

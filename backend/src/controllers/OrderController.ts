@@ -24,6 +24,7 @@ type DestroyOrderReqParams = {
 
 type DestroyItemOrderReqParams = {
   id: string;
+  item_id: string;
 };
 
 export class OrderController {
@@ -67,13 +68,21 @@ export class OrderController {
       quantity,
     });
 
-    res.json(item);
+    res.json({
+      id: item.id,
+      order_id: item.orderId,
+      product_id: item.productId,
+      quantity: item.quantity,
+    });
   }
 
   async destroyItem(req: Request, res: Response) {
-    const { id } = req.params as DestroyItemOrderReqParams;
+    const { id, item_id } = req.params as DestroyItemOrderReqParams;
 
-    const item = await this.destoryItemAction.handle(id);
+    const item = await this.destoryItemAction.handle({
+      orderId: id,
+      itemId: item_id,
+    });
 
     res.json(item);
   }
