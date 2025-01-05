@@ -1,4 +1,5 @@
 import type { Request, Response } from "express";
+import { DestroyItem as DestroyItemAction } from "../actions/order/DestroyItem";
 import { StoreItem as StoreItemAction } from "../actions/order/StoreItem";
 import { StoreOrder } from "../actions/order/StoreOrder";
 import { DestroyOrder } from "./../actions/order/DestroyOrder";
@@ -21,11 +22,16 @@ type DestroyOrderReqParams = {
   id: string;
 };
 
+type DestroyItemOrderReqParams = {
+  id: string;
+};
+
 export class OrderController {
   constructor(
     private readonly storeOrder: StoreOrder,
     private readonly destroyOrder: DestroyOrder,
-    private readonly storeItemAction: StoreItemAction
+    private readonly storeItemAction: StoreItemAction,
+    private readonly destoryItemAction: DestroyItemAction
   ) {}
 
   async store(req: Request, res: Response) {
@@ -55,12 +61,20 @@ export class OrderController {
     const { id } = req.params as StoreItemOrderReqParams;
     const { product_id, quantity } = req.body as StoreItemOrderReqBody;
 
-    await this.storeItemAction.handle({
+    const item = await this.storeItemAction.handle({
       orderId: id,
       productId: product_id,
       quantity,
     });
 
-    res.sendStatus(201);
+    res.json(item);
+  }
+
+  async destroyItem(req: Request, res: Response) {
+    const { id } = req.params as DestroyItemOrderReqParams;
+
+    const item = await this.destoryItemAction.handle(id);
+
+    res.json(item);
   }
 }

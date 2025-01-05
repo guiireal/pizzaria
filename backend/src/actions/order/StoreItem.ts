@@ -16,6 +16,12 @@ export class StoreItem {
         productId,
         quantity,
       },
+      select: {
+        id: true,
+        orderId: true,
+        productId: true,
+        quantity: true,
+      },
     });
   }
 }
