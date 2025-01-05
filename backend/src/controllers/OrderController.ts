@@ -1,16 +1,31 @@
 import type { Request, Response } from "express";
-import { DestroyOrder } from "../actions/order/DestroyOrder";
+import { StoreItem as StoreItemAction } from "../actions/order/StoreItem";
 import { StoreOrder } from "../actions/order/StoreOrder";
+import { DestroyOrder } from "./../actions/order/DestroyOrder";
 
 type StoreOrderReqBody = {
   table: number;
   name: string;
 };
 
+type StoreItemOrderReqParams = {
+  id: string;
+};
+
+type StoreItemOrderReqBody = {
+  product_id: string;
+  quantity: number;
+};
+
+type DestroyOrderReqParams = {
+  id: string;
+};
+
 export class OrderController {
   constructor(
     private readonly storeOrder: StoreOrder,
-    private readonly destroyOrder: DestroyOrder
+    private readonly destroyOrder: DestroyOrder,
+    private readonly storeItemAction: StoreItemAction
   ) {}
 
   async store(req: Request, res: Response) {
@@ -29,10 +44,23 @@ export class OrderController {
   }
 
   async destroy(req: Request, res: Response) {
-    const { id } = req.params;
+    const { id } = req.params as DestroyOrderReqParams;
 
     const order = await this.destroyOrder.handle(id);
 
     res.json(order);
+  }
+
+  async storeItem(req: Request, res: Response) {
+    const { id } = req.params as StoreItemOrderReqParams;
+    const { product_id, quantity } = req.body as StoreItemOrderReqBody;
+
+    await this.storeItemAction.handle({
+      orderId: id,
+      productId: product_id,
+      quantity,
+    });
+
+    res.sendStatus(201);
   }
 }
