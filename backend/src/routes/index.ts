@@ -10,6 +10,7 @@ import { CryptoService } from "../services/CryptoService";
 import { JWTService } from "../services/JWTService";
 import { PrismaService } from "../services/PrismaService";
 import { categoryRoutes } from "./category";
+import { orderRoutes } from "./order";
 import { productRoutes } from "./product";
 
 const routes = Router();
@@ -35,4 +36,4 @@ routes.get(
 );
 routes.post("/users", userController.store.bind(userController));
 
-export { categoryRoutes, productRoutes, routes };
+export { categoryRoutes, orderRoutes, productRoutes, routes };

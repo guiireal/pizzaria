@@ -1,4 +1,5 @@
 import cors from "cors";
+import path from "node:path";
 
 import express, {
   type NextFunction,
@@ -11,9 +12,7 @@ import "express-async-errors";
 import { BadRequestError } from "./errors/BadRequestError";
 import { ForbiddenError } from "./errors/ForbiddenError";
 import { NotAuthorizedError } from "./errors/NotAuthorizedError";
-import { categoryRoutes, productRoutes, routes } from "./routes";
-
-import path from "node:path";
+import { categoryRoutes, orderRoutes, productRoutes, routes } from "./routes";
 
 const PORT = process.env.APP_PORT || 3333;
 
@@ -27,6 +26,7 @@ app.use(cors());
 app.use(routes);
 app.use("/categories", categoryRoutes);
 app.use("/products", productRoutes);
+app.use("/orders", orderRoutes);
 
 app.use("/uploads", express.static(path.resolve(__dirname, "..", "temp")));
 
