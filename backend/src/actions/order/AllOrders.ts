@@ -5,6 +5,10 @@ export class AllOrders {
 
   async handle() {
     return await this.prismaClient.order.findMany({
+      where: {
+        draft: false,
+        status: false,
+      },
       orderBy: {
         createdAt: "desc",
       },
