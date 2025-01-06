@@ -2,6 +2,7 @@ import { Router } from "express";
 import { AllOrders } from "../actions/order/AllOrders";
 import { DestroyItem } from "../actions/order/DestroyItem";
 import { DestroyOrder } from "../actions/order/DestroyOrder";
+import { GetOrderById } from "../actions/order/GetOrderById";
 import { SendOrder } from "../actions/order/SendOrder";
 import { StoreItem } from "../actions/order/StoreItem";
 import { StoreOrder } from "../actions/order/StoreOrder";
@@ -20,6 +21,7 @@ const destroyOrder = new DestroyOrder(prismaClient);
 const storeItem = new StoreItem(prismaClient);
 const destroyItem = new DestroyItem(prismaClient);
 const sendOrder = new SendOrder(prismaClient);
+const getOrderById = new GetOrderById(prismaClient);
 
 const orderController = new OrderController(
   allOrders,
@@ -27,7 +29,8 @@ const orderController = new OrderController(
   destroyOrder,
   storeItem,
   destroyItem,
-  sendOrder
+  sendOrder,
+  getOrderById
 );
 
 const getUserById = new GetUserById(prismaClient);
@@ -44,6 +47,12 @@ routes.post(
   "/",
   authMiddleware.handle.bind(authMiddleware),
   orderController.store.bind(orderController)
+);
+
+routes.get(
+  "/:id",
+  authMiddleware.handle.bind(authMiddleware),
+  orderController.show.bind(orderController)
 );
 
 routes.delete(

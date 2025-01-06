@@ -1,9 +1,11 @@
 import type { Request, Response } from "express";
 import { AllOrders } from "../actions/order/AllOrders";
 import { DestroyItem as DestroyItemAction } from "../actions/order/DestroyItem";
+import { GetOrderById } from "../actions/order/GetOrderById";
 import { SendOrder } from "../actions/order/SendOrder";
 import { StoreItem as StoreItemAction } from "../actions/order/StoreItem";
 import { StoreOrder } from "../actions/order/StoreOrder";
+import { NotFoundError } from "../errors/NotFoundError";
 import { DestroyOrder } from "./../actions/order/DestroyOrder";
 
 type StoreOrderReqBody = {
@@ -33,6 +35,10 @@ type UpdateSendOrderReqParams = {
   id: string;
 };
 
+type ShowOrderReqParams = {
+  id: string;
+};
+
 export class OrderController {
   constructor(
     private readonly allOrders: AllOrders,
@@ -40,7 +46,8 @@ export class OrderController {
     private readonly destroyOrder: DestroyOrder,
     private readonly storeItemAction: StoreItemAction,
     private readonly destoryItemAction: DestroyItemAction,
-    private readonly sendOrder: SendOrder
+    private readonly sendOrder: SendOrder,
+    private readonly getOrderById: GetOrderById
   ) {}
 
   async index(_: Request, res: Response) {
@@ -56,6 +63,26 @@ export class OrderController {
         created_at: order.createdAt,
       }))
     );
+  }
+
+  async show(req: Request, res: Response) {
+    const { id } = req.params as ShowOrderReqParams;
+
+    const order = await this.getOrderById.handle(id);
+
+    if (!order) {
+      throw new NotFoundError("Order not found!");
+    }
+
+    res.json({
+      id: order.id,
+      table: order.table,
+      name: order.name,
+      draft: order.draft,
+      status: order.status,
+      created_at: order.createdAt,
+      items: order.items,
+    });
   }
 
   async store(req: Request, res: Response) {

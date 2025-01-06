@@ -12,6 +12,7 @@ import "express-async-errors";
 import { BadRequestError } from "./errors/BadRequestError";
 import { ForbiddenError } from "./errors/ForbiddenError";
 import { NotAuthorizedError } from "./errors/NotAuthorizedError";
+import { NotFoundError } from "./errors/NotFoundError";
 import { categoryRoutes, orderRoutes, productRoutes, routes } from "./routes";
 
 const PORT = process.env.APP_PORT || 3333;
@@ -56,12 +57,22 @@ app.use((error: Error, _: Request, res: Response, __: NextFunction) => {
       status: "error",
       message: error.message,
     });
+
+    return;
+  }
+
+  if (error instanceof NotFoundError) {
+    res.status(404).json({
+      status: "error",
+      message: error.message,
+    });
+
     return;
   }
 
   res.status(500).json({
     status: "error",
-    message: "Internal Server Error",
+    message: error.message,
   });
 });
 
