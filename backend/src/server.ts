@@ -32,8 +32,6 @@ app.use("/orders", orderRoutes);
 app.use("/uploads", express.static(path.resolve(__dirname, "..", "temp")));
 
 app.use((error: Error, _: Request, res: Response, __: NextFunction) => {
-  console.log(error);
-
   if (error instanceof BadRequestError) {
     res.status(400).json({
       status: "error",
@@ -70,9 +68,11 @@ app.use((error: Error, _: Request, res: Response, __: NextFunction) => {
     return;
   }
 
+  console.log(error);
+
   res.status(500).json({
     status: "error",
-    message: error.message,
+    message: "Internal server error!",
   });
 });
 

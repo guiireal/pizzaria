@@ -1,9 +1,13 @@
 import { PrismaClient } from "@prisma/client";
 
+type GetOrderByIdInputDTO = {
+  id: string;
+};
+
 export class GetOrderById {
   constructor(private readonly prismaClient: PrismaClient) {}
 
-  async handle(id: string) {
+  async handle({ id }: GetOrderByIdInputDTO) {
     return await this.prismaClient.order.findUnique({
       where: {
         id,

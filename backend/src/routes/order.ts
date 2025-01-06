@@ -1,5 +1,6 @@
 import { Router } from "express";
 import { AllOrders } from "../actions/order/AllOrders";
+import { CompleteOrder } from "../actions/order/CompleteOrder";
 import { DestroyItem } from "../actions/order/DestroyItem";
 import { DestroyOrder } from "../actions/order/DestroyOrder";
 import { GetOrderById } from "../actions/order/GetOrderById";
@@ -22,6 +23,7 @@ const storeItem = new StoreItem(prismaClient);
 const destroyItem = new DestroyItem(prismaClient);
 const sendOrder = new SendOrder(prismaClient);
 const getOrderById = new GetOrderById(prismaClient);
+const completeOrder = new CompleteOrder(prismaClient);
 
 const orderController = new OrderController(
   allOrders,
@@ -30,7 +32,8 @@ const orderController = new OrderController(
   storeItem,
   destroyItem,
   sendOrder,
-  getOrderById
+  getOrderById,
+  completeOrder
 );
 
 const getUserById = new GetUserById(prismaClient);
@@ -77,6 +80,12 @@ routes.put(
   "/:id/send",
   authMiddleware.handle.bind(authMiddleware),
   orderController.send.bind(orderController)
+);
+
+routes.put(
+  "/:id/complete",
+  authMiddleware.handle.bind(authMiddleware),
+  orderController.complete.bind(orderController)
 );
 
 export { routes as orderRoutes };

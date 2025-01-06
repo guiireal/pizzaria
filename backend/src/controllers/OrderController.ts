@@ -1,5 +1,6 @@
 import type { Request, Response } from "express";
 import { AllOrders } from "../actions/order/AllOrders";
+import { CompleteOrder } from "../actions/order/CompleteOrder";
 import { DestroyItem as DestroyItemAction } from "../actions/order/DestroyItem";
 import { GetOrderById } from "../actions/order/GetOrderById";
 import { SendOrder } from "../actions/order/SendOrder";
@@ -39,6 +40,10 @@ type ShowOrderReqParams = {
   id: string;
 };
 
+type UpdateCompleteOrderReqParams = {
+  id: string;
+};
+
 export class OrderController {
   constructor(
     private readonly allOrders: AllOrders,
@@ -47,7 +52,8 @@ export class OrderController {
     private readonly storeItemAction: StoreItemAction,
     private readonly destoryItemAction: DestroyItemAction,
     private readonly sendOrder: SendOrder,
-    private readonly getOrderById: GetOrderById
+    private readonly getOrderById: GetOrderById,
+    private readonly completeOrder: CompleteOrder
   ) {}
 
   async index(_: Request, res: Response) {
@@ -68,7 +74,7 @@ export class OrderController {
   async show(req: Request, res: Response) {
     const { id } = req.params as ShowOrderReqParams;
 
-    const order = await this.getOrderById.handle(id);
+    const order = await this.getOrderById.handle({ id });
 
     if (!order) {
       throw new NotFoundError("Order not found!");
@@ -135,6 +141,21 @@ export class OrderController {
     });
 
     res.json(item);
+  }
+
+  async complete(req: Request, res: Response) {
+    const { id } = req.params as UpdateCompleteOrderReqParams;
+
+    const order = await this.completeOrder.handle({ orderId: id });
+
+    res.json({
+      id: order.id,
+      table: order.table,
+      name: order.name,
+      draft: order.draft,
+      status: order.status,
+      created_at: order.createdAt,
+    });
   }
 
   async send(req: Request, res: Response) {
