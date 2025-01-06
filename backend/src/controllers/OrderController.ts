@@ -1,4 +1,5 @@
 import type { Request, Response } from "express";
+import { AllOrders } from "../actions/order/AllOrders";
 import { DestroyItem as DestroyItemAction } from "../actions/order/DestroyItem";
 import { SendOrder } from "../actions/order/SendOrder";
 import { StoreItem as StoreItemAction } from "../actions/order/StoreItem";
@@ -34,12 +35,29 @@ type UpdateSendOrderReqParams = {
 
 export class OrderController {
   constructor(
+    private readonly allOrders: AllOrders,
     private readonly storeOrder: StoreOrder,
     private readonly destroyOrder: DestroyOrder,
     private readonly storeItemAction: StoreItemAction,
     private readonly destoryItemAction: DestroyItemAction,
     private readonly sendOrder: SendOrder
   ) {}
+
+  async index(_: Request, res: Response) {
+    const orders = await this.allOrders.handle();
+
+    res.json(
+      orders.map((order) => ({
+        id: order.id,
+        table: order.table,
+        name: order.name,
+        draft: order.draft,
+        status: order.status,
+        created_at: order.createdAt,
+        items: order.items,
+      }))
+    );
+  }
 
   async store(req: Request, res: Response) {
     const { table, name } = req.body as StoreOrderReqBody;
