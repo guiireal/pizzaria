@@ -54,7 +54,6 @@ export class OrderController {
         draft: order.draft,
         status: order.status,
         created_at: order.createdAt,
-        items: order.items,
       }))
     );
   }

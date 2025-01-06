@@ -19,19 +19,6 @@ export class AllOrders {
         draft: true,
         status: true,
         createdAt: true,
-        items: {
-          select: {
-            id: true,
-            quantity: true,
-            product: {
-              select: {
-                id: true,
-                name: true,
-                price: true,
-              },
-            },
-          },
-        },
       },
     });
   }
