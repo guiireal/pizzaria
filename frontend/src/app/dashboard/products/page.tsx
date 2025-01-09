@@ -1,7 +1,9 @@
+import { Form } from "./components/Form";
+
 export default function Page() {
   return (
-    <main>
-      <h1>Página de produtos</h1>
-    </main>
+    <>
+      <Form />
+    </>
   );
 }
