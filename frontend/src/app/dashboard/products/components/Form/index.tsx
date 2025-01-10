@@ -5,6 +5,7 @@ import { api } from "@/services/api";
 import { getSessionTokenClient } from "@/services/cookies/client";
 import { UploadCloud } from "lucide-react";
 import Image from "next/image";
+import { useRouter } from "next/navigation";
 import { ChangeEvent, useState } from "react";
 import { toast } from "sonner";
 import styles from "./styles.module.scss";
@@ -20,6 +21,7 @@ type FormProps = {
 export function Form({ categories }: FormProps) {
   const [image, setImage] = useState<File>();
   const [previewImage, setPreviewImage] = useState("");
+  const router = useRouter();
 
   async function handleSubmit(formData: FormData) {
     const category = formData.get("category");
@@ -53,6 +55,8 @@ export function Form({ categories }: FormProps) {
     } catch (error: any) {
       console.error(error);
       toast.error(`Erro ao cadastrar produto! ${error.message}`);
+    } finally {
+      router.push("/dashboard");
     }
   }
 
@@ -64,6 +68,7 @@ export function Form({ categories }: FormProps) {
     const imageFile = event.target.files[0];
 
     if (!["image/png", "image/jpeg"].includes(imageFile.type)) {
+      toast.warning("Formato de imagem inválido!");
       return;
     }
 
