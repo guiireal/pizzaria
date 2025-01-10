@@ -6,8 +6,8 @@ import { getSessionTokenClient } from "@/services/cookies/client";
 import { UploadCloud } from "lucide-react";
 import Image from "next/image";
 import { ChangeEvent, useState } from "react";
+import { toast } from "sonner";
 import styles from "./styles.module.scss";
-
 type Category = {
   id: string;
   name: string;
@@ -28,6 +28,7 @@ export function Form({ categories }: FormProps) {
     const description = formData.get("description");
 
     if (!category || !name || !price || !description || !image) {
+      toast.warning("Preencha todos os campos!");
       return;
     }
 
@@ -41,11 +42,18 @@ export function Form({ categories }: FormProps) {
     data.append("description", description);
     data.append("banner", image);
 
-    await api.post("/products", data, {
-      headers: {
-        Authorization: `Bearer ${token}`,
-      },
-    });
+    try {
+      await api.post("/products", data, {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      });
+
+      toast.success("Produto cadastrado com sucesso!");
+    } catch (error: any) {
+      console.error(error);
+      toast.error(`Erro ao cadastrar produto! ${error.message}`);
+    }
   }
 
   function handleFile(event: ChangeEvent<HTMLInputElement>) {
