@@ -39,7 +39,7 @@ export function Form({ categories }: FormProps) {
     const data = new FormData();
 
     data.append("name", name);
-    data.append("category", category);
+    data.append("category_id", category);
     data.append("price", price);
     data.append("description", description);
     data.append("banner", image);
