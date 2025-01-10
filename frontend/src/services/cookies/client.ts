@@ -1,5 +1,5 @@
 import { getCookie } from "cookies-next";
 
-export function getSessionTokenServer() {
+export function getSessionTokenClient() {
   return getCookie("session");
 }

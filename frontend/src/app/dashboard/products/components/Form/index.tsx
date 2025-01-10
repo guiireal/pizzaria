@@ -1,14 +1,52 @@
 "use client";
 
 import { Button } from "@/app/dashboard/components/Button";
+import { api } from "@/services/api";
+import { getSessionTokenClient } from "@/services/cookies/client";
 import { UploadCloud } from "lucide-react";
 import Image from "next/image";
 import { ChangeEvent, useState } from "react";
 import styles from "./styles.module.scss";
 
-export function Form() {
+type Category = {
+  id: string;
+  name: string;
+};
+
+type FormProps = {
+  categories: Category[];
+};
+
+export function Form({ categories }: FormProps) {
   const [image, setImage] = useState<File>();
   const [previewImage, setPreviewImage] = useState("");
+
+  async function handleSubmit(formData: FormData) {
+    const category = formData.get("category");
+    const name = formData.get("name");
+    const price = formData.get("price");
+    const description = formData.get("description");
+
+    if (!category || !name || !price || !description || !image) {
+      return;
+    }
+
+    const token = await getSessionTokenClient();
+
+    const data = new FormData();
+
+    data.append("name", name);
+    data.append("category", category);
+    data.append("price", price);
+    data.append("description", description);
+    data.append("banner", image);
+
+    await api.post("/products", data, {
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
+    });
+  }
 
   function handleFile(event: ChangeEvent<HTMLInputElement>) {
     if (!event.target.files || !event.target.files[0]) {
@@ -29,7 +67,7 @@ export function Form() {
     <main className={styles.container}>
       <h1>Novo produto</h1>
 
-      <form action="" className={styles.form}>
+      <form action={handleSubmit} className={styles.form}>
         <label htmlFor="" className={styles.labelImage}>
           <span>
             <UploadCloud size={30} color="#fff" />
@@ -55,15 +93,12 @@ export function Form() {
         </label>
 
         <select name="category">
-          <option key={1} value="1">
-            Categoria 1
-          </option>
-          <option key={2} value="2">
-            Categoria 2
-          </option>
-          <option key={3} value="3">
-            Categoria 3
-          </option>
+          <option value="">Selecione uma categoria</option>
+          {categories.map((category, index) => (
+            <option key={index} value={category.id}>
+              {category.name}
+            </option>
+          ))}
         </select>
 
         <input
