@@ -1,3 +1,4 @@
+import { OrderProvider } from "@/providers/order";
 import { ReactNode } from "react";
 import { Header } from "./components/Header";
 
@@ -9,7 +10,7 @@ export default function Layout({ children }: LayoutProps) {
   return (
     <>
       <Header />
-      {children}
+      <OrderProvider>{children}</OrderProvider>
     </>
   );
 }
