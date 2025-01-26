@@ -15,6 +15,7 @@ type AuthContextProps = {
   loadingAuth: boolean;
   loading: boolean;
   signIn: (credentials: SignInProps) => Promise<void>;
+  signOut: () => Promise<void>;
 };
 
 type AuthProviderProps = {
@@ -90,6 +91,13 @@ export function AuthProvider({ children }: AuthProviderProps) {
     }
   }
 
+  async function signOut() {
+    await AsyncStorage.clear();
+
+    setUser({} as UserProps);
+    setToken("");
+  }
+
   return (
     <AuthContext.Provider
       value={{
@@ -99,6 +107,7 @@ export function AuthProvider({ children }: AuthProviderProps) {
         loadingAuth,
         loading,
         signIn,
+        signOut,
       }}
     >
       {children}
