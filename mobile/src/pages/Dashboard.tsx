@@ -1,3 +1,4 @@
+import { useState } from "react";
 import {
   SafeAreaView,
   StyleSheet,
@@ -7,6 +8,15 @@ import {
 } from "react-native";
 
 export default function Dashboard() {
+  const [number, setNumber] = useState("");
+
+  async function openOrder() {
+    if (!number) {
+      alert("Informe o número da mesa!");
+      return;
+    }
+  }
+
   return (
     <SafeAreaView style={styles.container}>
       <Text style={styles.title}>Novo pedido</Text>
@@ -15,8 +25,10 @@ export default function Dashboard() {
         placeholder="Número da mesa"
         placeholderTextColor="#f0f0f0"
         keyboardType="numeric"
+        value={number}
+        onChangeText={setNumber}
       />
-      <TouchableOpacity style={styles.button}>
+      <TouchableOpacity style={styles.button} onPress={openOrder}>
         <Text style={styles.buttonText}>Abrir mesa</Text>
       </TouchableOpacity>
     </SafeAreaView>

@@ -17,7 +17,8 @@ export default function SignIn() {
 
   async function handleLogin() {
     if (!email || !password) {
-      return alert("Preencha todos os campos!");
+      alert("Preencha todos os campos!");
+      return;
     }
 
     await signIn({ email, password });
